@@ -16,8 +16,11 @@ export default async function Home() {
       <CreatePet />
       <div className="divider" />
       {pets.length === 0 && <Empty />}
-      {pets.map(pet => <PetItem key={pet.name} name={pet.name} owner={pet.owner} />)
-      }
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">My Pets</h1>
+        {pets.map(pet => <PetItem key={pet.name} name={pet.name} owner={pet.owner} />)
+        }
+      </div>
 
     </div>
   )
