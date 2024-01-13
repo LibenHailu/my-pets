@@ -13,7 +13,6 @@ export default async function Home() {
 
   return (
     <div >
-      {JSON.stringify(pets)}
       <CreatePet />
       <div className="divider" />
       {pets.length === 0 && <Empty />}

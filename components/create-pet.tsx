@@ -1,41 +1,36 @@
-import { revalidatePath } from "next/cache";
-import { sql } from '@vercel/postgres';
+"use client";
+import { useFormState } from "react-dom";
+import { createPet } from "@/actions/pet";
+import { SubmitButton } from "./submit-button";
 export const CreatePet = () => {
-    async function createPet(formData: FormData) {
-        "use server"
-        try {
-            const name = formData.get("name") as string;
-            const owner = formData.get("owner") as string;
-            console.log(name, owner)
-            await sql`
-            INSERT INTO pets (Name, Owner)
-            VALUES (${name}, ${owner});
-          `;
-
-            revalidatePath("/");
-        } catch (e) {
-            console.error(e);
-            return { message: "Failed to create pet" };
-        }
-    }
-
+    const [state, formAction] = useFormState(createPet, null);
     return (
-        <form action={createPet} className="flex gap-4 md:flex-row flex-col">
+        <form action={formAction} className="flex gap-4 md:flex-row flex-col">
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Your pet name"
-                    className="input input-bordered w-full max-w-xs"
-                />
-                <input
-                    type="text"
-                    name="owner"
-                    placeholder="Your name"
-                    className="input input-bordered w-full max-w-xs"
-                />
+                <div>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Your pet name"
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                    <p className="text-sm text-red-600 p-2">
+                        {state?.errors?.name?.map((err) => err)}
+                    </p>
+                </div>
+                <div>
+                    <input
+                        type="text"
+                        name="owner"
+                        placeholder="Your name"
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                    <p className="text-sm text-red-600 p-2">
+                        {state?.errors?.owner?.map((err) => err)}
+                    </p>
+                </div>
             </div>
-            <button type="submit" className="btn btn-active">Add Your Pet</button>
+            <SubmitButton btnText="Add Your Pet" />
         </form>
     );
 };
